@@ -18,4 +18,12 @@ class Main
   # TODO: make image
   # todo connect images to one bigger image with sort result
   # todo export image file
+
+  def init
+    # TODO: manage params
+  end
 end
+
+# TODO: start action
+main = Main.new
+main.init
