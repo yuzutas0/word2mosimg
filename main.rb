@@ -35,12 +35,8 @@ class Main
     # todo convert to specific size and color
 
     response = search @keyword
-
-    array = []
-    response.search('img').each do |img|
-      array << img['src'] if SEARCH_IMAGE_REGEX =~ img['src']
-    end
-    puts 'array: ' + array.length.to_s
+    image_url_list = extract_image_url_list response
+    puts 'array: ' + image_url_list.length.to_s
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
@@ -62,6 +58,14 @@ class Main
     response = Nokogiri::HTML(open(request_uri, &:read).toutf8)
     sleep(2)
     response
+  end
+
+  def extract_image_url_list(response)
+    image_url_list = []
+    response.search('img').each do |img|
+      image_url_list << img['src'] if SEARCH_IMAGE_REGEX =~ img['src']
+    end
+    image_url_list
   end
 end
 
