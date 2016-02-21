@@ -17,4 +17,6 @@ describe 'Main' do
     array = main.parse html
     expect(array.length).to eq(20)
   end
+
+  # TODO: Test for save images
 end

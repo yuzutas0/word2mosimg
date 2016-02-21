@@ -21,6 +21,12 @@ class Main
   IMAGES_QUERY = '\?q=tbn:.{50,70}'.freeze
   IMAGES_REGEX = /^#{IMAGES_PROTOCOL + IMAGES_DOMAIN + IMAGES_QUERY}$/
 
+  # name, directory for save images
+  NAME_SEPARATOR = 'images?q=tbn:'.freeze
+  NAME_SUFFIX = '.jpg'.freeze
+  ASSETS_PATH = (Dir.pwd + File::SEPARATOR + 'assets' + File::SEPARATOR).freeze
+  ORIGINALS_PATH = (ASSETS_PATH + 'originals' + File::SEPARATOR).freeze
+
   # set parameters
   def init(keyword)
     @keyword = keyword
@@ -42,8 +48,8 @@ class Main
     # todo convert to specific size and color
 
     response = search @keyword
-    parsed = parse response
-    puts 'array: ' + parsed.length.to_s
+    images = parse response
+    save images
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
@@ -76,9 +82,17 @@ class Main
     end
     array
   end
+
+  # save original images
+  def save(images)
+    images.each do |image|
+      name = ORIGINALS_PATH + image.split(NAME_SEPARATOR)[1] + NAME_SUFFIX
+      File.write(name, open(image, &:read))
+    end
+  end
 end
 
 # initialize and execute
 main = Main.new
 main.init 'test'
-# main.execute
+main.execute
