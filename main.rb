@@ -72,4 +72,4 @@ end
 # initialize and execute
 main = Main.new
 main.init
-main.execute
+# main.execute
