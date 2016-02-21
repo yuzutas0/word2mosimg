@@ -55,7 +55,7 @@ class Crawler
   end
 
   # ----------------------------------------
-  # support action
+  # sub action
   # ----------------------------------------
 
   # scrape - save original image files from google images with keyword
@@ -67,7 +67,7 @@ class Crawler
   end
 
   # ----------------------------------------
-  # helper methods
+  # support action
   # ----------------------------------------
 
   # create uri to search google images with keyword
@@ -102,6 +102,10 @@ class Crawler
       File.write(name, open(image, &:read))
     end
   end
+
+  # ----------------------------------------
+  # helper methods
+  # ----------------------------------------
 
   # check images count except for '.' and '..' and '.DS_Store' and '.keep'
   def enough?(path, max)
