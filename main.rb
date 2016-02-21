@@ -12,9 +12,16 @@ class Main
   # parameter
   # ----------------------------------------
 
-  SEARCH_WORD_PREFIX = 'https://www.google.co.jp/search?tbm=isch&q='.freeze
-  SEARCH_IMAGE_REGEX = %r{^https://encrypted-tbn}
+  # request for google images
+  SEARCH_PREFIX = 'https://www.google.co.jp/search?tbm=isch&q='.freeze
 
+  # regex for image links
+  IMAGES_PROTOCOL = 'https:\/\/'.freeze
+  IMAGES_DOMAIN = 'encrypted-tbn(0|1|2|3)\.gstatic\.com\/images'.freeze
+  IMAGES_QUERY = '\?q=tbn:.{50,70}'.freeze
+  IMAGES_REGEX = /^#{IMAGES_PROTOCOL + IMAGES_DOMAIN + IMAGES_QUERY}$/
+
+  # set parameters
   def init(keyword)
     @keyword = keyword
   end
@@ -35,8 +42,8 @@ class Main
     # todo convert to specific size and color
 
     response = search @keyword
-    image_url_list = extract_image_url_list response
-    puts 'array: ' + image_url_list.length.to_s
+    parsed = parse response
+    puts 'array: ' + parsed.length.to_s
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
@@ -53,19 +60,21 @@ class Main
   # sub action
   # ----------------------------------------
 
+  # get Nokogiri::HTML object after search google images with keyword
   def search(keyword)
-    request_uri = SEARCH_WORD_PREFIX + keyword
+    request_uri = SEARCH_PREFIX + keyword
     response = Nokogiri::HTML(open(request_uri, &:read).toutf8)
     sleep(2)
     response
   end
 
-  def extract_image_url_list(response)
-    image_url_list = []
+  # extract url list about images from response Nokogiri::HTML object
+  def parse(response)
+    array = []
     response.search('img').each do |img|
-      image_url_list << img['src'] if SEARCH_IMAGE_REGEX =~ img['src']
+      array << img['src'] if IMAGES_REGEX =~ img['src']
     end
-    image_url_list
+    array
   end
 end
 
