@@ -47,9 +47,68 @@ class Main
     # TODO: search images by keyword
     # todo convert to specific size and color
 
+    # same as browser
+    # https://www.google.co.jp/search?q=test&tbm=isch
     response = search @keyword
     images = parse response
-    save images
+    save(images, ORIGINALS_PATH + 'test01/')
+
+
+    # no response
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&ijn=0&start=0'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test02/')
+
+    # no response
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&ijn=0&start=1'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test03/')
+
+    # no response
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&ijn=1&start=0'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test04/')
+
+    # no response
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&ijn=1&start=1'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test05/')
+
+    # response similar to browser's pattern but not same
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&start=0'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test06/')
+
+    # response similar to browser's pattern and test6, but not same
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&start=1'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test07/')
+
+    # no response
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&ijn=0'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test08/')
+
+    # no response
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&ijn=1'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test09/')
+
+    # different response
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&start=19'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test10/')
+
+    # different response
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&start=20'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test11/')
+
+    # different response
+    response = search_file 'https://www.google.co.jp/search?q=test&tbm=isch&start=21'
+    images = parse response
+    save(images, ORIGINALS_PATH + 'test12/')
+
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
@@ -60,6 +119,64 @@ class Main
     # TODO: make image
     # todo connect images to one bigger image with sort result
     # todo export image file
+  end
+
+  def test
+    array01 = []
+    array06 = []
+    array07 = []
+    array10 = []
+    array11 = []
+    array12 = []
+
+    [1, 6, 7, 10, 11, 12].each do |count|
+      count_str = count.to_s
+      count_str = '0' + count.to_s if count < 10
+      puts ORIGINALS_PATH + 'test' + count_str + '/'
+
+      Dir.entries(ORIGINALS_PATH + 'test' + count_str + '/').each do |file_path|
+        puts file_path
+        file_name = File.basename file_path
+        next if file_name == '.' || file_name == '..'
+        array01 << file_name if count == 01
+        array06 << file_name if count == 06
+        array07 << file_name if count == 07
+        array10 << file_name if count == 10
+        array11 << file_name if count == 11
+        array12 << file_name if count == 12
+      end
+    end
+
+    puts '01 && 06 -> ' + (array01 & array06).length.to_s + ' / 20 is same element!'
+    puts '01 && 07 -> ' + (array01 & array07).length.to_s + ' / 20 is same element!'
+
+    puts '01 && 10 -> ' + (array01 & array10).length.to_s + ' / 20 is same element!'
+    puts '01 && 11 -> ' + (array01 & array11).length.to_s + ' / 20 is same element!'
+    puts '01 && 12 -> ' + (array01 & array12).length.to_s + ' / 20 is same element!'
+
+    puts '06 && 10 -> ' + (array06 & array10).length.to_s + ' / 20 is same element!'
+    puts '06 && 11 -> ' + (array06 & array11).length.to_s + ' / 20 is same element!'
+    puts '06 && 12 -> ' + (array06 & array12).length.to_s + ' / 20 is same element!'
+
+    puts '07 && 10 -> ' + (array06 & array10).length.to_s + ' / 20 is same element!'
+    puts '07 && 11 -> ' + (array06 & array11).length.to_s + ' / 20 is same element!'
+    puts '07 && 12 -> ' + (array06 & array12).length.to_s + ' / 20 is same element!'
+
+    # result is ...
+    #
+    # 01 && 06 -> 18 / 20 is same element!
+    # 01 && 07 -> 17 / 20 is same element!
+    # 01 && 10 -> 0 / 20 is same element!
+    # 01 && 11 -> 0 / 20 is same element!
+    # 01 && 12 -> 1 / 20 is same element!
+    #
+    # 06 && 10 -> 1 / 20 is same element!
+    # 06 && 11 -> 0 / 20 is same element!
+    # 06 && 12 -> 0 / 20 is same element!
+    #
+    # 07 && 10 -> 1 / 20 is same element!
+    # 07 && 11 -> 0 / 20 is same element!
+    # 07 && 12 -> 0 / 20 is same element!
   end
 
   # ----------------------------------------
@@ -74,6 +191,14 @@ class Main
     response
   end
 
+  # get text file from ajax I/O of google images
+  def search_file(uri)
+    request_uri = uri
+    response = open(request_uri, &:read).toutf8
+    response = Nokogiri::HTML('<html><head><title>dummy</title></head><body>' + response + '</body></html>')
+    response
+  end
+
   # extract url list about images from response Nokogiri::HTML object
   def parse(response)
     array = []
@@ -84,9 +209,9 @@ class Main
   end
 
   # save original images
-  def save(images)
+  def save(images, path)
     images.each do |image|
-      name = ORIGINALS_PATH + image.split(NAME_SEPARATOR)[1] + NAME_SUFFIX
+      name = path + image.split(NAME_SEPARATOR)[1] + NAME_SUFFIX
       File.write(name, open(image, &:read))
     end
   end
@@ -95,7 +220,10 @@ end
 # initialize and execute
 main = Main.new
 main.init 'test'
-main.execute
+#main.execute
+main.test
+
+
 
 # ---------------------------------------------------
 # https://www.google.co.jp/search?q=test&tbm=isch
