@@ -4,10 +4,9 @@ class Main
   # library
   # ----------------------------------------
 
-  # TODO: set libaries
-  # todo require 'open-uri'
-  # todo require 'kconv'
-  # todo require 'json'
+  require 'open-uri'
+  require 'kconv'
+  require 'nokogiri'
 
   # ----------------------------------------
   # parameter
@@ -33,6 +32,11 @@ class Main
 
     # TODO: search images by keyword
     # todo convert to specific size and color
+
+    request_uri = 'https://www.ruby-lang.org/en'
+    response = Nokogiri::HTML(open(request_uri, &:read).toutf8)
+    sleep(2)
+    puts response.at('//*[@id="intro"]/p').text
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
