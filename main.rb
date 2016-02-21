@@ -36,15 +36,11 @@ class Main
 
     response = search @keyword
 
-    # count = 0
     array = []
     response.search('img').each do |img|
-      # count += 1
       array << img['src'] if SEARCH_IMAGE_REGEX =~ img['src']
     end
-
-    # puts 'count: ' + count.to_s -> 20
-    puts 'array: ' + array.length.to_s # -> 20
+    puts 'array: ' + array.length.to_s
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
