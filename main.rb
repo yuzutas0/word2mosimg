@@ -15,8 +15,8 @@ class Main
   SEARCH_WORD_PREFIX = 'https://www.google.co.jp/search?tbm=isch&q='.freeze
   SEARCH_IMAGE_REGEX = %r{^https://encrypted-tbn}
 
-  def init
-    @keyword = 'test'
+  def init(keyword)
+    @keyword = keyword
   end
 
   # ----------------------------------------
@@ -71,5 +71,5 @@ end
 
 # initialize and execute
 main = Main.new
-main.init
+main.init 'test'
 # main.execute
