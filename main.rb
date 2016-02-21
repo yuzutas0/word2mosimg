@@ -12,6 +12,9 @@ class Main
   # parameter
   # ----------------------------------------
 
+  SEARCH_WORD_PREFIX = 'https://www.google.co.jp/search?tbm=isch&q='.freeze
+  SEARCH_IMAGE_REGEX = %r{^https://encrypted-tbn}
+
   def init
     @keyword = 'test'
   end
@@ -21,8 +24,6 @@ class Main
   # ----------------------------------------
 
   def execute
-    puts @keyword
-
     # TODO: input keyword
     # todo validate
 
@@ -33,10 +34,17 @@ class Main
     # TODO: search images by keyword
     # todo convert to specific size and color
 
-    request_uri = 'https://www.ruby-lang.org/en'
-    response = Nokogiri::HTML(open(request_uri, &:read).toutf8)
-    sleep(2)
-    puts response.at('//*[@id="intro"]/p').text
+    response = search @keyword
+
+    # count = 0
+    array = []
+    response.search('img').each do |img|
+      # count += 1
+      array << img['src'] if SEARCH_IMAGE_REGEX =~ img['src']
+    end
+
+    # puts 'count: ' + count.to_s -> 20
+    puts 'array: ' + array.length.to_s # -> 20
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
@@ -47,6 +55,17 @@ class Main
     # TODO: make image
     # todo connect images to one bigger image with sort result
     # todo export image file
+  end
+
+  # ----------------------------------------
+  # sub action
+  # ----------------------------------------
+
+  def search(keyword)
+    request_uri = SEARCH_WORD_PREFIX + keyword
+    response = Nokogiri::HTML(open(request_uri, &:read).toutf8)
+    sleep(2)
+    response
   end
 end
 
