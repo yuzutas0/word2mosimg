@@ -1,5 +1,6 @@
 require_relative 'main'
 
+# TODO: fix
 describe 'Main' do
   main = Main.new
 
