@@ -13,7 +13,7 @@ describe 'Main' do
 
   # bundle exec rspec -e 'parse' main_spec.rb
   it 'parse' do
-    html = Nokogiri::HTML(File.open('example.html').read.toutf8)
+    html = Nokogiri::HTML(File.open('example/render.html').read.toutf8)
     array = main.parse html
     expect(array.length).to eq(20)
   end

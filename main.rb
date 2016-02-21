@@ -96,3 +96,46 @@ end
 main = Main.new
 main.init 'test'
 main.execute
+
+# ---------------------------------------------------
+# https://www.google.co.jp/search?q=test&tbm=isch
+# ---------------------------------------------------
+# https://www.google.co.jp/search?
+#
+# q=test
+# tbm=isch
+# ---------------------------------------------------
+# https://www.google.co.jp/async/irc?async=iu:0,_id:irc_async,_pms:s&vet=10ahUKEwirk7u3iInLAhVje6YKHXJNBaQQo0EIPg..i&ved=0ahUKEwirk7u3iInLAhVje6YKHXJNBaQQo0EIPg&yv=2
+# ---------------------------------------------------
+# https://www.google.co.jp/async/irc?
+#
+# async=iu:0,_id:irc_async,_pms:s
+# vet=10ahUKEwirk7u3iInLAhVje6YKHXJNBaQQo0EIPg..i
+# ved=0ahUKEwirk7u3iInLAhVje6YKHXJNBaQQo0EIPg
+# yv=2
+
+# ---------------------------------------------------
+# https://www.google.co.jp/search?q=test&tbm=isch&ijn=1&ei=IMbJVs6BEMbEmwWV4bfIAg&start=100&ved=0ahUKEwjOkaebhYnLAhVG4qYKHZXwDSkQuT0IISgB&vet=10ahUKEwjOkaebhYnLAhVG4qYKHZXwDSkQuT0IISgB.IMbJVs6BEMbEmwWV4bfIAg.i
+# ---------------------------------------------------
+# https://www.google.co.jp/search?
+#
+# q=test
+# tbm=isch
+# ijn=1
+# ei=IMbJVs6BEMbEmwWV4bfIAg
+# start=100
+# ved=0ahUKEwjOkaebhYnLAhVG4qYKHZXwDSkQuT0IISgB
+# vet=10ahUKEwjOkaebhYnLAhVG4qYKHZXwDSkQuT0IISgB.IMbJVs6BEMbEmwWV4bfIAg.i
+
+# ---------------------------------------------------
+# https://www.google.co.jp/search?q=test&tbm=isch&ijn=2&ei=IMbJVs6BEMbEmwWV4bfIAg&start=200&ved=0ahUKEwjOkaebhYnLAhVG4qYKHZXwDSkQuT0IISgB&vet=10ahUKEwjOkaebhYnLAhVG4qYKHZXwDSkQuT0IISgB.IMbJVs6BEMbEmwWV4bfIAg.i
+# ---------------------------------------------------
+# https://www.google.co.jp/search?
+#
+# q=test
+# tbm=isch
+# ijn=2
+# ei=IMbJVs6BEMbEmwWV4bfIAg
+# start=200
+# ved=0ahUKEwjOkaebhYnLAhVG4qYKHZXwDSkQuT0IISgB
+# vet=10ahUKEwjOkaebhYnLAhVG4qYKHZXwDSkQuT0IISgB.IMbJVs6BEMbEmwWV4bfIAg.i
