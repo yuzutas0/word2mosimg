@@ -15,7 +15,6 @@ class Main
   # set parameters
   def init(keyword)
     @keyword = keyword
-    @crawler = Crawler.new
   end
 
   # ----------------------------------------
@@ -33,7 +32,7 @@ class Main
     # TODO: search images by keyword
     # todo convert to specific size and color
 
-    @crawler.crawl_images @keyword
+    Crawler.new.crawl_images @keyword
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
