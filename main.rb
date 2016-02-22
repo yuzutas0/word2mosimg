@@ -58,7 +58,10 @@ main.init 'test'
 # main.execute
 
 require 'RMagick'
-img = Magick::ImageList.new(Dir.pwd + '/assets/targets/zeta.jpg')
-new_img = img.blur_image(20.0, 10.0)
-new_img.write(Dir.pwd + '/assets/targets/blur.jpg')
+FILE_NAME = (Dir.pwd + '/assets/targets/zeta').freeze
+FILE_SUFFIX = '.jpg'.freeze
+img = Magick::ImageList.new(FILE_NAME + FILE_SUFFIX)
+new_img = img.quantize(256, Magick::GRAYColorspace)
+new_img.write(FILE_NAME + '_gray' + FILE_SUFFIX)
+img.destroy!
 new_img.destroy!
