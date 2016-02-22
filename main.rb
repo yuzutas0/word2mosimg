@@ -61,5 +61,4 @@ require 'RMagick'
 img = Magick::ImageList.new(Dir.pwd + '/assets/targets/zeta.jpg')
 new_img = img.blur_image(20.0, 10.0)
 new_img.write(Dir.pwd + '/assets/targets/blur.jpg')
-
-
+new_img.destroy!
