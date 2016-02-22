@@ -6,3 +6,4 @@ gem 'rubocop'
 gem 'rspec'
 
 gem 'nokogiri'
+gem 'rmagick'

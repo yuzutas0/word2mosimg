@@ -72,6 +72,8 @@ class Crawler
     images = de_dupe parse search uri(keyword, start_str)
     @images << images
     # TODO: validate images (size <- when save)
+    # todo larger than 70 * 70 pixels
+    # todo one line is smaller than 1.7 times as the other one
     save(images, ORIGINALS_PATH, MAX_IMAGES_COUNT)
   end
 

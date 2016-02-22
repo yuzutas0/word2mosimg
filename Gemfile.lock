@@ -10,6 +10,7 @@ GEM
       ast (~> 2.2)
     powerpack (0.1.1)
     rainbow (2.1.0)
+    rmagick (2.15.4)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
@@ -37,5 +38,6 @@ PLATFORMS
 
 DEPENDENCIES
   nokogiri
+  rmagick
   rspec
   rubocop
