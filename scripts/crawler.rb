@@ -7,6 +7,7 @@ class Crawler
   require 'open-uri'
   require 'kconv'
   require 'nokogiri'
+  require 'RMagick'
 
   # ----------------------------------------
   # parameter
@@ -37,12 +38,18 @@ class Crawler
   ASSETS_PATH = (Dir.pwd + File::SEPARATOR + 'assets' + File::SEPARATOR).freeze
   ORIGINALS_PATH = (ASSETS_PATH + 'originals' + File::SEPARATOR).freeze
 
+  # image size
+  MIN_ORIGINAL_LENGTH = 50
+  RESIZED_LENGTH = 50
+  COLOR_VARIATION = 256
+
   # pagination
   MAX_IMAGES_COUNT = 30
   PER = 20
+  MAX_REQUEST_COUNT = 100 * PER
 
   # Initial File size in originals path
-  # ... like '.' and '..' and '.DS_Store' and '.keep'
+  # like '.' and '..' and '.DS_Store' and '.keep'
   INITIAL_FILE_COUNT_IN_ORIGINALS = Dir.entries(ORIGINALS_PATH).length
 
   def init
@@ -57,42 +64,53 @@ class Crawler
   # crawl - save original image files from google images with keyword
   def crawl_images(keyword)
     start = 0
-    until enough?(ORIGINALS_PATH, MAX_IMAGES_COUNT)
+    until enough? || limit?(start)
       scrape_images(keyword, start.to_s)
       start += PER
     end
   end
 
   # ----------------------------------------
-  # sub action
+  # helper methods - crawler condition
+  # ----------------------------------------
+
+  # check images count except for initial files
+  def enough?
+    present_file_count = Dir.entries(ORIGINALS_PATH).length
+    images_count = present_file_count - INITIAL_FILE_COUNT_IN_ORIGINALS
+    images_count >= MAX_IMAGES_COUNT
+  end
+
+  # check the count of http request
+  def limit?(start)
+    start >= MAX_REQUEST_COUNT
+  end
+
+  # ----------------------------------------
+  # helper methods - scrape
   # ----------------------------------------
 
   # scrape - save original image files from google images with keyword
   def scrape_images(keyword, start_str)
     images = de_dupe parse search uri(keyword, start_str)
     @images << images
-    # TODO: validate images (size <- when save)
-    # todo larger than 70 * 70 pixels
-    # todo one line is smaller than 1.7 times as the other one
     save(images, ORIGINALS_PATH, MAX_IMAGES_COUNT)
   end
 
   # ----------------------------------------
-  # support action
+  # helper methods - get image uri list
   # ----------------------------------------
 
   # create uri to search google images with keyword
   def uri(keyword, start_str)
-    uri = SEARCH_QUERY_PREFIX + keyword + SEARCH_START_PREFIX + start_str
-    uri
+    SEARCH_QUERY_PREFIX + keyword + SEARCH_START_PREFIX + start_str
   end
 
   # get Nokogiri::HTML object after search google images with uri
   def search(uri)
     response = open(uri, &:read).toutf8
     sleep SLEEP_TIME
-    response = Nokogiri::HTML(HTML_PREFIX + response + HTML_SUFFIX)
-    response
+    Nokogiri::HTML(HTML_PREFIX + response + HTML_SUFFIX)
   end
 
   # extract url list about images from response Nokogiri::HTML object
@@ -111,22 +129,45 @@ class Crawler
     array
   end
 
-  # save original images
-  def save(images, path, max)
+  # ----------------------------------------
+  # helper methods - save images
+  # ----------------------------------------
+
+  # save images
+  def save(images, path)
     images.each do |image|
-      break if enough?(path, max)
+      break if enough?
       name = path + image.split(NAME_SEPARATOR)[1] + NAME_SUFFIX
-      File.write(name, open(image, &:read))
-      sleep SLEEP_TIME
+      post(name, image)
     end
   end
 
-  # ----------------------------------------
-  # helper methods
-  # ----------------------------------------
+  # post binary
+  def post(name, image)
+    binary = download image
+    img = Magick::ImageList.new(binary)
+    export(img, name) if check? img
+    img.destroy!
+  end
 
-  # check images count except for initial files
-  def enough?(path, max)
-    Dir.entries(path).length - INITIAL_FILE_COUNT_IN_ORIGINALS >= max
+  # download image file
+  def download(image)
+    sleep SLEEP_TIME
+    open(image, &:read)
+  end
+
+  # check image size
+  def check?(img)
+    size_vector = [img.columns, img.rows].sort!
+    smaller = size_vector[0]
+    larger = size_vector[1]
+    smaller >= MIN_ORIGINAL_LENGTH && larger <= smaller * 2
+  end
+
+  # export image file
+  def export(img, name)
+    img = img.resize(RESIZED_LENGTH, RESIZED_LENGTH)
+    img = img.quantize(COLOR_VARIATION, Magick::GRAYColorspace)
+    img.write(name)
   end
 end
