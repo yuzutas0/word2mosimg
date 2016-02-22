@@ -53,10 +53,13 @@ class Main
 end
 
 # initialize and execute
+require 'uri'
+keyword = URI.escape '愛'
 main = Main.new
-main.init 'test'
+main.init keyword
 main.execute
 
+# # target image
 # require 'RMagick'
 # FILE_NAME = (Dir.pwd + '/assets/targets/zeta').freeze
 # FILE_SUFFIX = '.jpg'.freeze

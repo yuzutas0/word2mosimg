@@ -18,39 +18,33 @@ class Crawler
   SEARCH_START_PREFIX = '&tbm=isch&start='.freeze
   HTML_PREFIX = '<html><head><title>dummy</title></head><body>'.freeze
   HTML_SUFFIX = '</body></html>'.freeze
-
-  # regex for image links
-  IMAGES_PROTOCOL = 'https:\/\/'.freeze
-  IMAGES_DOMAIN = 'encrypted-tbn(0|1|2|3)\.gstatic\.com\/images'.freeze
-  IMAGES_QUERY = '\?q=tbn:.{34,94}'.freeze
-  IMAGES_REGEX = /^#{IMAGES_PROTOCOL + IMAGES_DOMAIN + IMAGES_QUERY}$/
-
-  # tag name for parse
-  IMG_TAG = 'img'.freeze
-  SRC_TAG = 'src'.freeze
-
-  # http request
   SLEEP_TIME = 0.5
-
-  # name, directory for save images
-  NAME_SEPARATOR = 'images?q=tbn:'.freeze
-  NAME_SUFFIX = '.jpg'.freeze
-  ASSETS_PATH = (Dir.pwd + File::SEPARATOR + 'assets' + File::SEPARATOR).freeze
-  ORIGINALS_PATH = (ASSETS_PATH + 'originals' + File::SEPARATOR).freeze
-
-  # image size
-  MIN_ORIGINAL_LENGTH = 50
-  RESIZED_LENGTH = 50
-  COLOR_VARIATION = 256
-
-  # pagination
   MAX_IMAGES_COUNT = 30
   PER = 20
   MAX_REQUEST_COUNT = 100 * PER
 
-  # Initial File size in originals path
-  # like '.' and '..' and '.DS_Store' and '.keep'
+  # parse image links
+  IMAGES_PROTOCOL = 'https:\/\/'.freeze
+  IMAGES_DOMAIN = 'encrypted-tbn(0|1|2|3)\.gstatic\.com\/images'.freeze
+  IMAGES_QUERY = '\?q=tbn:.{34,94}'.freeze
+  IMAGES_REGEX = /^#{IMAGES_PROTOCOL + IMAGES_DOMAIN + IMAGES_QUERY}$/
+  IMG_TAG = 'img'.freeze
+  SRC_TAG = 'src'.freeze
+
+  # save images - file and directory
+  NAME_SEPARATOR = 'images?q=tbn:'.freeze
+  NAME_SUFFIX = '.jpg'.freeze
+  ASSETS_PATH = (Dir.pwd + File::SEPARATOR + 'assets' + File::SEPARATOR).freeze
+  ORIGINALS_PATH = (ASSETS_PATH + 'originals' + File::SEPARATOR).freeze
+  ELEMENTS_PATH = (ASSETS_PATH + 'elements' + File::SEPARATOR).freeze
+
+  # Initial File size in originals path like '.', '..', '.DS_Store', '.keep'
   INITIAL_FILE_COUNT_IN_ORIGINALS = Dir.entries(ORIGINALS_PATH).length
+
+  # save images - size and color
+  MIN_ORIGINAL_LENGTH = 50
+  RESIZED_LENGTH = 100
+  COLOR_VARIATION = 256
 
   def init
     @images = []
@@ -94,7 +88,7 @@ class Crawler
   def scrape_images(keyword, start_str)
     images = de_dupe parse search uri(keyword, start_str)
     @images << images
-    save(images, ORIGINALS_PATH)
+    save images
   end
 
   # ----------------------------------------
@@ -134,26 +128,32 @@ class Crawler
   # ----------------------------------------
 
   # save images
-  def save(images, path)
+  def save(images)
     images.each do |image|
       break if enough?
-      name = path + image.split(NAME_SEPARATOR)[1] + NAME_SUFFIX
-      post(name, image)
+      base_name = image.split(NAME_SEPARATOR)[1]
+      original_name = ORIGINALS_PATH + base_name + NAME_SUFFIX
+      element_name = ELEMENTS_PATH + base_name + NAME_SUFFIX
+      post(original_name, element_name, image)
     end
   end
 
   # post binary
-  def post(name, image)
-    binary = download image
-    img = Magick::ImageList.new(binary)
-    export(img, name) if check? img
+  def post(original_name, element_name, image)
+    download(original_name, image)
+    img = Magick::ImageList.new(original_name)
+    if check? img
+      export(img, element_name)
+    else
+      File.delete original_name
+    end
     img.destroy!
   end
 
   # download image file
-  def download(image)
+  def download(original_name, image)
+    File.write(original_name, open(image, &:read))
     sleep SLEEP_TIME
-    open(image, &:read)
   end
 
   # check image size
@@ -165,9 +165,9 @@ class Crawler
   end
 
   # export image file
-  def export(img, name)
+  def export(img, element_name)
     img = img.resize(RESIZED_LENGTH, RESIZED_LENGTH)
     img = img.quantize(COLOR_VARIATION, Magick::GRAYColorspace)
-    img.write(name)
+    img.write(element_name)
   end
 end
