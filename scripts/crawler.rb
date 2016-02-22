@@ -66,7 +66,8 @@ class Crawler
     uri = create(keyword, start_str)
     response = search uri
     images = parse response
-    # TODO: validate images (size, already exist)
+    # TODO: validate images (already exist)
+    # TODO: validate images (size <- when save)
     save(images, ORIGINALS_PATH, MAX_IMAGES_COUNT)
   end
 
