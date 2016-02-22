@@ -28,6 +28,9 @@ class Crawler
   IMG_TAG = 'img'.freeze
   SRC_TAG = 'src'.freeze
 
+  # http request
+  SLEEP_TIME = 2
+
   # name, directory for save images
   NAME_SEPARATOR = 'images?q=tbn:'.freeze
   NAME_SUFFIX = '.jpg'.freeze
@@ -63,6 +66,7 @@ class Crawler
     uri = create(keyword, start_str)
     response = search uri
     images = parse response
+    # TODO: validate images (size, already exist)
     save(images, ORIGINALS_PATH, MAX_IMAGES_COUNT)
   end
 
@@ -80,7 +84,7 @@ class Crawler
   # get Nokogiri::HTML object after search google images with uri
   def search(uri)
     response = open(uri, &:read).toutf8
-    sleep(2)
+    sleep(SLEEP_TIME)
     response = Nokogiri::HTML(HTML_PREFIX + response + HTML_SUFFIX)
     response
   end
@@ -100,6 +104,7 @@ class Crawler
       break if enough?(path, max)
       name = path + image.split(NAME_SEPARATOR)[1] + NAME_SUFFIX
       File.write(name, open(image, &:read))
+      sleep(SLEEP_TIME)
     end
   end
 
