@@ -32,7 +32,7 @@ class Main
     # TODO: search images by keyword
     # todo convert to specific size and color
 
-    Crawler.new.crawl_images @keyword
+    Crawler.new.init.crawl_images @keyword
 
     # TODO: learn combination of images
     # todo convert goal_image to vector

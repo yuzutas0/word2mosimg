@@ -21,7 +21,7 @@ class Crawler
   # regex for image links
   IMAGES_PROTOCOL = 'https:\/\/'.freeze
   IMAGES_DOMAIN = 'encrypted-tbn(0|1|2|3)\.gstatic\.com\/images'.freeze
-  IMAGES_QUERY = '\?q=tbn:.{50,70}'.freeze
+  IMAGES_QUERY = '\?q=tbn:.{34,94}'.freeze
   IMAGES_REGEX = /^#{IMAGES_PROTOCOL + IMAGES_DOMAIN + IMAGES_QUERY}$/
 
   # tag name for parse
@@ -29,7 +29,7 @@ class Crawler
   SRC_TAG = 'src'.freeze
 
   # http request
-  SLEEP_TIME = 2
+  SLEEP_TIME = 0.5
 
   # name, directory for save images
   NAME_SEPARATOR = 'images?q=tbn:'.freeze
@@ -42,7 +42,13 @@ class Crawler
   PER = 20
 
   # Initial File size in originals path
+  # ... like '.' and '..' and '.DS_Store' and '.keep'
   INITIAL_FILE_COUNT_IN_ORIGINALS = Dir.entries(ORIGINALS_PATH).length
+
+  def init
+    @images = []
+    self
+  end
 
   # ----------------------------------------
   # main action
@@ -63,10 +69,8 @@ class Crawler
 
   # scrape - save original image files from google images with keyword
   def scrape_images(keyword, start_str)
-    uri = create(keyword, start_str)
-    response = search uri
-    images = parse response
-    # TODO: validate images (already exist)
+    images = de_dupe parse search uri(keyword, start_str)
+    @images << images
     # TODO: validate images (size <- when save)
     save(images, ORIGINALS_PATH, MAX_IMAGES_COUNT)
   end
@@ -76,16 +80,15 @@ class Crawler
   # ----------------------------------------
 
   # create uri to search google images with keyword
-  def create(keyword, start_str)
-    uri = SEARCH_QUERY_PREFIX + keyword
-    uri += SEARCH_START_PREFIX + start_str
+  def uri(keyword, start_str)
+    uri = SEARCH_QUERY_PREFIX + keyword + SEARCH_START_PREFIX + start_str
     uri
   end
 
   # get Nokogiri::HTML object after search google images with uri
   def search(uri)
     response = open(uri, &:read).toutf8
-    sleep(SLEEP_TIME)
+    sleep SLEEP_TIME
     response = Nokogiri::HTML(HTML_PREFIX + response + HTML_SUFFIX)
     response
   end
@@ -99,13 +102,20 @@ class Crawler
     array
   end
 
+  # extract url list except for already exist
+  def de_dupe(images)
+    array = []
+    images.each { |img| array << img unless @images.include?(img) }
+    array
+  end
+
   # save original images
   def save(images, path, max)
     images.each do |image|
       break if enough?(path, max)
       name = path + image.split(NAME_SEPARATOR)[1] + NAME_SUFFIX
       File.write(name, open(image, &:read))
-      sleep(SLEEP_TIME)
+      sleep SLEEP_TIME
     end
   end
 
@@ -113,7 +123,7 @@ class Crawler
   # helper methods
   # ----------------------------------------
 
-  # check images count except for '.' and '..' and '.DS_Store' and '.keep'
+  # check images count except for initial files
   def enough?(path, max)
     Dir.entries(path).length - INITIAL_FILE_COUNT_IN_ORIGINALS >= max
   end
