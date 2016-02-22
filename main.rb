@@ -55,4 +55,11 @@ end
 # initialize and execute
 main = Main.new
 main.init 'test'
-main.execute
+# main.execute
+
+require 'RMagick'
+img = Magick::ImageList.new(Dir.pwd + '/assets/targets/zeta.jpg')
+new_img = img.blur_image(20.0, 10.0)
+new_img.write(Dir.pwd + '/assets/targets/blur.jpg')
+
+
