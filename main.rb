@@ -60,8 +60,25 @@ main.init 'test'
 require 'RMagick'
 FILE_NAME = (Dir.pwd + '/assets/targets/zeta').freeze
 FILE_SUFFIX = '.jpg'.freeze
+
 img = Magick::ImageList.new(FILE_NAME + FILE_SUFFIX)
 new_img = img.quantize(256, Magick::GRAYColorspace)
 new_img.write(FILE_NAME + '_gray' + FILE_SUFFIX)
+
+# not error 1500 * 1500
+pixel = img.get_pixels(1499, 50, 1, 1)[0]
+pixel_color = [255 * pixel.red / Magick::QuantumRange, 255 * pixel.green / Magick::QuantumRange, 255 * pixel.blue / Magick::QuantumRange]
+puts pixel_color
+
+# not error
+pixel = img.pixel_color(-100000, 1500000)
+pixel_color = [255 * pixel.red / Magick::QuantumRange, 255 * pixel.green / Magick::QuantumRange, 255 * pixel.blue / Magick::QuantumRange]
+puts pixel_color
+
+# error for 1500 * 1500
+new_pixel = new_img.get_pixels(0, 0, 50, 1501)[0]
+new_pixel_color = [255 * new_pixel.red / Magick::QuantumRange, 255 * new_pixel.green / Magick::QuantumRange, 255 * new_pixel.blue / Magick::QuantumRange]
+puts new_pixel_color
+
 img.destroy!
 new_img.destroy!
