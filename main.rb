@@ -63,9 +63,14 @@ FILE_SUFFIX = '.jpg'.freeze
 
 img = Magick::ImageList.new(FILE_NAME + FILE_SUFFIX)
 
+# resize
+width = height = 200
+resized_img = img.resize(width, height)
+
 # gray scale
-new_img = img.quantize(256, Magick::GRAYColorspace)
-new_img.write(FILE_NAME + '_gray' + FILE_SUFFIX)
+new_img = resized_img.quantize(256, Magick::GRAYColorspace)
+new_img.write(FILE_NAME + '_new' + FILE_SUFFIX)
 
 img.destroy!
+resized_img.destroy!
 new_img.destroy!
