@@ -94,7 +94,7 @@ class Crawler
   def scrape_images(keyword, start_str)
     images = de_dupe parse search uri(keyword, start_str)
     @images << images
-    save(images, ORIGINALS_PATH, MAX_IMAGES_COUNT)
+    save(images, ORIGINALS_PATH)
   end
 
   # ----------------------------------------
