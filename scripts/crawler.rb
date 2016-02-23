@@ -59,6 +59,7 @@ class Crawler
   def crawl_images(keyword)
     start = 0
     until enough? || limit?(start)
+      puts 'start: ' + start.to_s
       scrape_images(keyword, start.to_s)
       start += PER
     end
