@@ -135,7 +135,11 @@ class Crawler
       base_name = image.split(NAME_SEPARATOR)[1]
       original_name = ORIGINALS_PATH + base_name + NAME_SUFFIX
       element_name = ELEMENTS_PATH + base_name + NAME_SUFFIX
-      post(original_name, element_name, image)
+      begin
+        post(original_name, element_name, image)
+      rescue => error
+        puts error
+      end
     end
   end
 
