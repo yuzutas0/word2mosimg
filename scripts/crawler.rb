@@ -19,13 +19,13 @@ class Crawler
   HTML_PREFIX = '<html><head><title>dummy</title></head><body>'.freeze
   HTML_SUFFIX = '</body></html>'.freeze
   SLEEP_TIME = 1
-  MAX_IMAGES_COUNT = 40000
+  MAX_IMAGES_COUNT = 40_000
   PER = 20
-  MAX_REQUEST_COUNT = 10000 * PER
+  MAX_REQUEST_COUNT = 10_000 * PER
 
   # parse image links
   IMAGES_PROTOCOL = 'https:\/\/'.freeze
-  IMAGES_DOMAIN = 'encrypted-tbn(0|1|2|3|4|5|6|7|8|9)\.gstatic\.com\/images'.freeze
+  IMAGES_DOMAIN = 'encrypted-tbn\d\.gstatic\.com\/images'.freeze
   IMAGES_QUERY = '\?q=tbn:.{34,94}'.freeze
   IMAGES_REGEX = /^#{IMAGES_PROTOCOL + IMAGES_DOMAIN + IMAGES_QUERY}$/
   IMG_TAG = 'img'.freeze
