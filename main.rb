@@ -5,14 +5,12 @@ class Main
   # ----------------------------------------
 
   require_relative 'scripts/crawler'
+  require_relative 'scripts/reductor'
 
   # ----------------------------------------
   # parameter
   # ----------------------------------------
 
-  # TODO
-
-  # set parameters
   def init(keyword)
     @keyword = keyword
   end
@@ -31,7 +29,8 @@ class Main
     # search images by keyword
     Crawler.new.init.crawl_images @keyword
 
-    # TODO: convert to specific size and color
+    # original images into 100 * 100 gray scaled
+    Reductor.new.init.element
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
@@ -43,12 +42,6 @@ class Main
     # todo connect images to one bigger image with sort result
     # todo export image file
   end
-
-  # ----------------------------------------
-  # sub action
-  # ----------------------------------------
-
-  # TODO
 end
 
 # initialize and execute

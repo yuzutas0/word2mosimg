@@ -7,7 +7,6 @@ class Crawler
   require 'open-uri'
   require 'kconv'
   require 'nokogiri'
-  require 'RMagick'
 
   # ----------------------------------------
   # parameter
@@ -36,15 +35,9 @@ class Crawler
   NAME_SUFFIX = '.jpg'.freeze
   ASSETS_PATH = (Dir.pwd + File::SEPARATOR + 'assets' + File::SEPARATOR).freeze
   ORIGINALS_PATH = (ASSETS_PATH + 'originals' + File::SEPARATOR).freeze
-  ELEMENTS_PATH = (ASSETS_PATH + 'elements' + File::SEPARATOR).freeze
 
   # Initial File size in originals path like '.', '..', '.DS_Store', '.keep'
   INITIAL_FILE_COUNT_IN_ORIGINALS = Dir.entries(ORIGINALS_PATH).length
-
-  # save images - size and color
-  MIN_ORIGINAL_LENGTH = 50
-  RESIZED_LENGTH = 100
-  COLOR_VARIATION = 256
 
   def init
     @images = []
@@ -134,46 +127,17 @@ class Crawler
       break if enough?
       base_name = image.split(NAME_SEPARATOR)[1]
       original_name = ORIGINALS_PATH + base_name + NAME_SUFFIX
-      element_name = ELEMENTS_PATH + base_name + NAME_SUFFIX
-      begin
-        post(original_name, element_name, image)
-      rescue => error
-        puts error
-      end
+      download(original_name, image)
     end
-  end
-
-  # post binary
-  def post(original_name, element_name, image)
-    download(original_name, image)
-    # => reductor
-    img = Magick::ImageList.new(original_name)
-    if check? img
-      export(img, element_name)
-    else
-      File.delete original_name
-    end
-    img.destroy!
   end
 
   # download image file
   def download(original_name, image)
-    File.write(original_name, open(image, &:read))
+    begin
+      File.write(original_name, open(image, &:read))
+    rescue => error
+      puts error
+    end
     sleep SLEEP_TIME
-  end
-
-  # check image size
-  def check?(img)
-    size_vector = [img.columns, img.rows].sort!
-    smaller = size_vector[0]
-    larger = size_vector[1]
-    smaller >= MIN_ORIGINAL_LENGTH && larger <= smaller * 2
-  end
-
-  # export image file
-  def export(img, element_name)
-    img = img.resize(RESIZED_LENGTH, RESIZED_LENGTH)
-    img = img.quantize(COLOR_VARIATION, Magick::GRAYColorspace)
-    img.write(element_name)
   end
 end

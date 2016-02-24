@@ -23,6 +23,8 @@ class Reductor
 
   # original file and directory
   ORIGINALS_PATH = (ASSETS_PATH + 'originals' + File::SEPARATOR).freeze
+  ORIGINALS_NAME_SEPARATOR = 'images?q=tbn:'.freeze
+  MIN_ORIGINAL_LENGTH = 50
 
   # element file and directory
   ELEMENTS_PATH = (ASSETS_PATH + 'elements' + File::SEPARATOR).freeze
@@ -46,12 +48,55 @@ class Reductor
     [img, resized, grayed].each(&:destroy!)
   end
 
-  # TODO: to gray scale 100 * 100 in originals
-  # todo get images in originals path(.jpg)
+  # reduction of original file to elements
+  def element
+    image_name_list = get_image_name_list ORIGINALS_PATH
+    image_name_list.each { |image_name| post(image_name) }
+  end
 
   # TODO: to 1 * 1
 
   # ----------------------------------------
-  # helper methods - foo bar
+  # helper methods - target
   # ----------------------------------------
+
+  # get images(.jpg) in the path
+  def get_image_name_list(path)
+    image_name_list = []
+    Dir.glob(path + '*' + FILE_SUFFIX).each do |file|
+      image_name_list << file
+    end
+    image_name_list
+  end
+
+  # ----------------------------------------
+  # helper methods - element
+  # ----------------------------------------
+
+  # customize and through original image to the element path
+  def post(original_name)
+    img = Magick::ImageList.new(original_name)
+    if check? img
+      element_name = ELEMENTS_PATH + File.basename(image_name)
+      export(img, element_name)
+    else
+      File.delete original_name
+    end
+    img.destroy!
+  end
+
+  # check image size
+  def check?(img)
+    size_vector = [img.columns, img.rows].sort!
+    smaller = size_vector[0]
+    larger = size_vector[1]
+    smaller >= MIN_ORIGINAL_LENGTH && larger <= smaller * 2
+  end
+
+  # export image file resized and gray scaled
+  def export(img, element_name)
+    img = img.resize(ELEMENTS_SIDE_LENGTH, ELEMENTS_SIDE_LENGTH)
+    img = img.quantize(COLOR_VARIATION, Magick::GRAYColorspace)
+    img.write(element_name)
+  end
 end
