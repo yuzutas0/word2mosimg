@@ -75,8 +75,8 @@ class Reductor
         puts image_name.to_s + ' is not pure gray !!! /n' if [pixel.red, pixel.green, pixel.blue].uniq.length != 1
         puts image_name.to_s + ' is not h = 0.0 !!! /n' if pixel.to_hsla[0] != 0.0 # => none
         puts image_name.to_s + ' is not s = 0.0 !!! /n' if pixel.to_hsla[1] != 0.0 # => none
-        puts image_name.to_s + ' is not s = 1.0 !!! /n' if pixel.to_hsla[3] != 1.0 # => none
-        puts pixel.red.to_s + ' : ' + pixel.to_hsla[2]
+        puts image_name.to_s + ' is not a = 1.0 !!! /n' if pixel.to_hsla[3] != 1.0 # => none
+        puts image_name.to_s + ' is not l = red / 256 !!! /n' if (pixel.red / 256) != pixel.to_hsla[2].to_i # => none
         l_of_hsla << pixel.to_hsla[2]
       end
       img.destroy!
