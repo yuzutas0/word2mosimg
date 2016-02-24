@@ -63,6 +63,22 @@ class Reductor
     image_name_list.each { |image_name| minimize(image_name) }
   end
 
+  # try to get color feature of targets
+  def get_target
+    img = Magick::ImageList.new(TARGET_FILE_NAME + NEW_TARGET_NAME_SUFFIX + FILE_SUFFIX)
+    pixels = img.get_pixels(0, 0, img.columns, img.rows)
+    count = 0
+    colors = []
+    pixels.each { |pixel|
+      if pixel.to_hsla[2].to_i < 50
+        puts (count / 200).to_s + ':' + (count % 200).to_s + ' => ' + pixel.to_hsla[2].to_i.to_s
+      end
+      colors << pixel.to_hsla[2].to_i
+      count += 1
+    }
+    puts colors
+  end
+
   # try to get color feature of pixels
   def get_colors
     image_name_list = get_image_name_list PIXELS_PATH
@@ -71,14 +87,14 @@ class Reductor
       img = Magick::ImageList.new(image_name)
       pixels = img.get_pixels(0, 0, img.columns, img.rows)
       puts image_name.to_s + ' is not 1 pixel !!! /n' if pixels.length != 1 # => none
-      for pixel in pixels
+      pixels.each { |pixel|
         puts image_name.to_s + ' is not pure gray !!! /n' if [pixel.red, pixel.green, pixel.blue].uniq.length != 1
         puts image_name.to_s + ' is not h = 0.0 !!! /n' if pixel.to_hsla[0] != 0.0 # => none
         puts image_name.to_s + ' is not s = 0.0 !!! /n' if pixel.to_hsla[1] != 0.0 # => none
         puts image_name.to_s + ' is not a = 1.0 !!! /n' if pixel.to_hsla[3] != 1.0 # => none
         puts image_name.to_s + ' is not l = red / 256 !!! /n' if (pixel.red / 256) != pixel.to_hsla[2].to_i # => none
         l_of_hsla << pixel.to_hsla[2]
-      end
+      }
       img.destroy!
     }
     puts 'min l is ' + l_of_hsla.sort[0].to_s + ' !!! /n' # => 9.0 for my example
