@@ -146,6 +146,7 @@ class Crawler
   # post binary
   def post(original_name, element_name, image)
     download(original_name, image)
+    # => reductor
     img = Magick::ImageList.new(original_name)
     if check? img
       export(img, element_name)
