@@ -25,14 +25,13 @@ class Main
     # TODO: input keyword
     # todo validate
 
-    # TODO: input goal_image
-    # todo validate
-    # todo convert to specific size and color
+    # target file into 200 * 200 gray scaled
+    Reductor.new.init.target
 
-    # TODO: search images by keyword
-    # todo convert to specific size and color
-
+    # search images by keyword
     Crawler.new.init.crawl_images @keyword
+
+    # TODO: convert to specific size and color
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
@@ -58,22 +57,3 @@ keyword = URI.escape '愛'
 main = Main.new
 main.init keyword
 main.execute
-
-# # target image
-# require 'RMagick'
-# FILE_NAME = (Dir.pwd + '/assets/targets/zeta').freeze
-# FILE_SUFFIX = '.jpg'.freeze
-#
-# img = Magick::ImageList.new(FILE_NAME + FILE_SUFFIX)
-#
-# # resize
-# width = height = 200
-# resized_img = img.resize(width, height)
-#
-# # gray scale
-# new_img = resized_img.quantize(256, Magick::GRAYColorspace)
-# new_img.write(FILE_NAME + '_new' + FILE_SUFFIX)
-#
-# img.destroy!
-# resized_img.destroy!
-# new_img.destroy!
