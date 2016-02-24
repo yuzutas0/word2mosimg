@@ -20,22 +20,21 @@ class Main
   # ----------------------------------------
 
   def execute
-    # TODO: input keyword
-    # todo validate
+    # reductor = Reductor.new.init
+    #
+    # # target file into 200 * 200 gray scaled
+    # reductor.target
+    #
+    # # search images by keyword
+    # Crawler.new.init.crawl_images @keyword
+    #
+    # # original images into 100 * 100 gray scaled
+    # reductor.element
+    #
+    # # element images into 1 * 1 to learn
+    # reductor.pixel
 
-    reductor = Reductor.new.init
-
-    # target file into 200 * 200 gray scaled
-    reductor.target
-
-    # search images by keyword
-    Crawler.new.init.crawl_images @keyword
-
-    # original images into 100 * 100 gray scaled
-    reductor.element
-
-    # element images into 1 * 1 to learn
-    reductor.pixel
+    Reductor.new.init.get_colors
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
@@ -55,3 +54,5 @@ keyword = URI.escape '愛'
 main = Main.new
 main.init keyword
 main.execute
+
+
