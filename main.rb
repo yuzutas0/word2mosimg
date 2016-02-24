@@ -34,7 +34,7 @@ class Main
     # # element images into 1 * 1 to learn
     # reductor.pixel
 
-    Reductor.new.init.get_target
+    Reductor.new.init.diff_colors
 
     # TODO: learn combination of images
     # todo convert goal_image to vector

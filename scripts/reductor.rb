@@ -64,41 +64,63 @@ class Reductor
   end
 
   # try to get color feature of targets
-  def get_target
+  def get_target_colors
     img = Magick::ImageList.new(TARGET_FILE_NAME + NEW_TARGET_NAME_SUFFIX + FILE_SUFFIX)
     pixels = img.get_pixels(0, 0, img.columns, img.rows)
-    count = 0
-    colors = []
-    pixels.each { |pixel|
-      if pixel.to_hsla[2].to_i < 50
-        puts (count / 200).to_s + ':' + (count % 200).to_s + ' => ' + pixel.to_hsla[2].to_i.to_s
-      end
-      colors << pixel.to_hsla[2].to_i
-      count += 1
-    }
-    puts colors
+    target_colors = [0, 0, 0, 0, 0, 0, 0, 0]
+    pixels.each { |pixel| set_color_valiation(pixel, target_colors) }
+    target_colors = normalize_color_valiation(target_colors)
+    target_colors
   end
 
   # try to get color feature of pixels
-  def get_colors
+  def get_pixels_colors
     image_name_list = get_image_name_list PIXELS_PATH
-    l_of_hsla = []
+    pixel_colors = [0, 0, 0, 0, 0, 0, 0, 0]
     image_name_list.each { |image_name|
       img = Magick::ImageList.new(image_name)
       pixels = img.get_pixels(0, 0, img.columns, img.rows)
-      puts image_name.to_s + ' is not 1 pixel !!! /n' if pixels.length != 1 # => none
-      pixels.each { |pixel|
-        puts image_name.to_s + ' is not pure gray !!! /n' if [pixel.red, pixel.green, pixel.blue].uniq.length != 1
-        puts image_name.to_s + ' is not h = 0.0 !!! /n' if pixel.to_hsla[0] != 0.0 # => none
-        puts image_name.to_s + ' is not s = 0.0 !!! /n' if pixel.to_hsla[1] != 0.0 # => none
-        puts image_name.to_s + ' is not a = 1.0 !!! /n' if pixel.to_hsla[3] != 1.0 # => none
-        puts image_name.to_s + ' is not l = red / 256 !!! /n' if (pixel.red / 256) != pixel.to_hsla[2].to_i # => none
-        l_of_hsla << pixel.to_hsla[2]
-      }
+      pixel = pixels[0]
+      set_color_valiation(pixel, pixel_colors)
       img.destroy!
     }
-    puts 'min l is ' + l_of_hsla.sort[0].to_s + ' !!! /n' # => 9.0 for my example
-    puts 'max l is ' + l_of_hsla.sort[-1].to_s + ' !!! /n' # => 251.0 for my example
+    pixel_colors = normalize_color_valiation(pixel_colors)
+    pixel_colors
+  end
+
+  def set_color_valiation(pixel, colors)
+    colors[0] += 1 if pixel.to_hsla[2].to_i >= 0   && pixel.to_hsla[2].to_i < 32
+    colors[1] += 1 if pixel.to_hsla[2].to_i >= 32  && pixel.to_hsla[2].to_i < 64
+    colors[2] += 1 if pixel.to_hsla[2].to_i >= 64  && pixel.to_hsla[2].to_i < 96
+    colors[3] += 1 if pixel.to_hsla[2].to_i >= 96  && pixel.to_hsla[2].to_i < 128
+    colors[4] += 1 if pixel.to_hsla[2].to_i >= 128 && pixel.to_hsla[2].to_i < 160
+    colors[5] += 1 if pixel.to_hsla[2].to_i >= 160 && pixel.to_hsla[2].to_i < 192
+    colors[6] += 1 if pixel.to_hsla[2].to_i >= 192 && pixel.to_hsla[2].to_i < 224
+    colors[7] += 1 if pixel.to_hsla[2].to_i >= 224 && pixel.to_hsla[2].to_i < 256
+  end
+
+  def normalize_color_valiation(colors)
+    result = [0, 0, 0, 0, 0, 0, 0, 0]
+    colors.each_with_index { |color, index|
+      result[index] = 10000 * color / colors.inject(:+)
+    }
+    result
+  end
+
+  def set_message(colors)
+    str = '['
+    colors.each { |color|
+      str += color.to_s
+      str += ',' if color != colors[-1]
+    }
+    str += ']'
+    str
+  end
+
+  # try to get color feature of pixels and targets combination
+  def diff_colors
+    puts 'target: ' + set_message(get_target_colors) # => target: [153,  29,  33,   37,   26,   43,   48, 9629]
+    puts 'pixels: ' + set_message(get_pixels_colors) # => pixels: [157, 514, 940, 1740, 2202, 2353, 1466,  625]
   end
 
   # ----------------------------------------
