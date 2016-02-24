@@ -76,6 +76,7 @@ class Reductor
         puts image_name.to_s + ' is not h = 0.0 !!! /n' if pixel.to_hsla[0] != 0.0 # => none
         puts image_name.to_s + ' is not s = 0.0 !!! /n' if pixel.to_hsla[1] != 0.0 # => none
         puts image_name.to_s + ' is not s = 1.0 !!! /n' if pixel.to_hsla[3] != 1.0 # => none
+        puts pixel.red.to_s + ' : ' + pixel.to_hsla[2]
         l_of_hsla << pixel.to_hsla[2]
       end
       img.destroy!
