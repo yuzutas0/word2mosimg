@@ -30,6 +30,10 @@ class Reductor
   ELEMENTS_PATH = (ASSETS_PATH + 'elements' + File::SEPARATOR).freeze
   ELEMENTS_SIDE_LENGTH = 100
 
+  # pixel file and directory
+  PIXELS_PATH = (ASSETS_PATH + 'pixels' + File::SEPARATOR).freeze
+  PIXELS_SIDE_LENGTH = 1
+
   def init
     # TODO: set parameters
     self
