@@ -35,7 +35,6 @@ class Reductor
   PIXELS_SIDE_LENGTH = 1
 
   def init
-    # TODO: set parameters
     self
   end
 
@@ -46,10 +45,10 @@ class Reductor
   # reduction of target file
   def target
     img = Magick::ImageList.new(TARGET_FILE_NAME + FILE_SUFFIX)
-    resized = img.resize(NEW_TARGET_SIDE_LENGTH, NEW_TARGET_SIDE_LENGTH)
-    grayed = resized.quantize(COLOR_VARIATION, Magick::GRAYColorspace)
-    grayed.write(TARGET_FILE_NAME + NEW_TARGET_NAME_SUFFIX + FILE_SUFFIX)
-    [img, resized, grayed].each(&:destroy!)
+    img = img.resize(NEW_TARGET_SIDE_LENGTH, NEW_TARGET_SIDE_LENGTH)
+    img = img.quantize(COLOR_VARIATION, Magick::GRAYColorspace)
+    img.write(TARGET_FILE_NAME + NEW_TARGET_NAME_SUFFIX + FILE_SUFFIX)
+    img.destroy!
   end
 
   # reduction of original file to elements
@@ -59,9 +58,13 @@ class Reductor
   end
 
   # TODO: to 1 * 1
+  def pixel
+    image_name_list = get_image_name_list ELEMENTS_PATH
+    image_name_list.each { |image_name| minimize(image_name) }
+  end
 
   # ----------------------------------------
-  # helper methods - target
+  # helper methods - element and pixel
   # ----------------------------------------
 
   # get images(.jpg) in the path
@@ -81,7 +84,7 @@ class Reductor
   def post(original_name)
     img = Magick::ImageList.new(original_name)
     if check? img
-      element_name = ELEMENTS_PATH + File.basename(image_name)
+      element_name = ELEMENTS_PATH + File.basename(original_name)
       export(img, element_name)
     else
       File.delete original_name
@@ -102,5 +105,16 @@ class Reductor
     img = img.resize(ELEMENTS_SIDE_LENGTH, ELEMENTS_SIDE_LENGTH)
     img = img.quantize(COLOR_VARIATION, Magick::GRAYColorspace)
     img.write(element_name)
+  end
+
+  # ----------------------------------------
+  # helper methods - pixel
+  # ----------------------------------------
+  def minimize(element_name)
+    img = Magick::ImageList.new(element_name)
+    img = img.resize(PIXELS_SIDE_LENGTH, PIXELS_SIDE_LENGTH)
+    pixel_name = PIXELS_PATH + File.basename(element_name)
+    img.write(pixel_name)
+    img.destroy!
   end
 end

@@ -23,14 +23,19 @@ class Main
     # TODO: input keyword
     # todo validate
 
+    reductor = Reductor.new.init
+
     # target file into 200 * 200 gray scaled
-    Reductor.new.init.target
+    reductor.target
 
     # search images by keyword
     Crawler.new.init.crawl_images @keyword
 
     # original images into 100 * 100 gray scaled
-    Reductor.new.init.element
+    reductor.element
+
+    # element images into 1 * 1 to learn
+    reductor.pixel
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
