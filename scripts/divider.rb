@@ -90,8 +90,8 @@ class Divider
   end
 
   # display list contents size
-  def display(array)
-    puts array.split[EXPORT_LIST_SEPARATOR].length
+  def display(string)
+    puts string.split(EXPORT_LIST_SEPARATOR).length
   end
 
   # ----------------------------------------
