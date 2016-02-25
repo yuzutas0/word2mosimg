@@ -33,14 +33,14 @@ class Analyzer
   # try to get color feature of pixels and targets combination
   def diff_colors
     puts 'target: ' + message(target_colors)
-    # => target: [153,  29,  33,   37,   26,   43,   48, 9629]
+    # => target: [153,  29,  33,   37,   26,   43,   48, 9629] for my example
 
     puts 'pixels: ' + message(pixels_colors)
-    # => pixels: [157, 514, 940, 1740, 2202, 2353, 1466,  625]
+    # => pixels: [157, 514, 940, 1740, 2202, 2353, 1466,  625] for my example
   end
 
   # ----------------------------------------
-  # helper methods - pixel
+  # helper methods - common
   # ----------------------------------------
 
   def message(colors)
@@ -53,6 +53,10 @@ class Analyzer
     str
   end
 
+  # ----------------------------------------
+  # helper methods - target
+  # ----------------------------------------
+
   # try to get color feature of targets
   def target_colors
     target_file = TARGET_FILE_NAME + NEW_TARGET_NAME_SUFFIX + FILE_SUFFIX
@@ -63,6 +67,10 @@ class Analyzer
     target_colors = normalize_color_variation(target_colors)
     target_colors
   end
+
+  # ----------------------------------------
+  # helper methods - pixel
+  # ----------------------------------------
 
   # try to get color feature of pixels
   def pixels_colors
@@ -92,6 +100,10 @@ class Analyzer
     end
     image_name_list
   end
+
+  # ----------------------------------------
+  # helper methods - color
+  # ----------------------------------------
 
   def color_variation(pixel, colors)
     pixel_l = pixel.to_hsla[2].to_i
