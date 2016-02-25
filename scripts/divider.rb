@@ -23,7 +23,7 @@ class Divider
   PIXELS_PATH = (ASSETS_PATH + 'pixels' + File::SEPARATOR).freeze
 
   # divided file and directory
-  DIVIDED_PATH = (DIVIDED_PATH + 'pixels' + File::SEPARATOR).freeze
+  DIVIDED_PATH = (ASSETS_PATH + 'divideds' + File::SEPARATOR).freeze
 
   # export file
   EXPORT_TARGET_FILE_PATH = (DIVIDED_PATH + 'target' + FILE_SUFFIX).freeze
