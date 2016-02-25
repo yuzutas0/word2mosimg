@@ -41,12 +41,17 @@ class Divider
 
   # try to set color feature of pixels and targets combination to file
   def divide
-    export(EXPORT_TARGET_FILE_PATH, target_color_list)
+    target_color_list_string = target_color_list
+    export(EXPORT_TARGET_FILE_PATH, target_color_list_string)
     # => like this: '1,0,3, ... 6,4,2'
+    puts target_color_list_string.length
+    # => 40,000
 
     pixels_color_list.each_with_index do |pixels_color_str, index|
-      path = DIVIDED_PATH + 'elements' + index.to_s + JPG_FILE_SUFFIX
+      path = DIVIDED_PATH + 'elements' + index.to_s + TEXT_FILE_SUFFIX
       export(path, pixels_color_str)
+      puts pixels_color_str.length
+      # => same as the count of analyzer
     end
     # => like this: 0 - 'hoge.jpg,foobar.jpg, ... ,last.jpg'
     # => like this: 1 - 'hoge.jpg,foobar.jpg, ... ,last.jpg'
