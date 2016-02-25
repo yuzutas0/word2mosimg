@@ -65,6 +65,7 @@ class Analyzer
     target_colors = [0, 0, 0, 0, 0, 0, 0, 0]
     pixels.each { |pixel| color_variation(pixel, target_colors) }
     target_colors = normalize_color_variation(target_colors)
+    img.destroy!
     target_colors
   end
 
