@@ -7,6 +7,7 @@ class Main
   require_relative 'scripts/crawler'
   require_relative 'scripts/reductor'
   require_relative 'scripts/analyzer'
+  require_relative 'scripts/divider'
 
   # ----------------------------------------
   # parameter
@@ -34,8 +35,12 @@ class Main
     #
     # # element images into 1 * 1 to learn
     # reductor.pixel
+    #
+    # # analyze color diff of target and pixel files
+    # Analyzer.new.init.diff_colors
 
-    Analyzer.new.init.diff_colors
+    # divide target and pixel colors to 8 pattern
+    Divider.new.init.divide
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
@@ -52,6 +57,4 @@ end
 # initialize and execute
 require 'uri'
 keyword = URI.escape '愛'
-main = Main.new
-main.init keyword
-main.execute
+Main.new.init(keyword).execute
