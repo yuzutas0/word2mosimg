@@ -12,7 +12,7 @@ class Divider
 
   # common
   ASSETS_PATH = (Dir.pwd + File::SEPARATOR + 'assets' + File::SEPARATOR).freeze
-  FILE_SUFFIX = '.jpg'.freeze
+  JPG_FILE_SUFFIX = '.jpg'.freeze
 
   # target file and directory
   TARGET_FILE_PATH = (ASSETS_PATH + 'targets' + File::SEPARATOR).freeze
@@ -26,7 +26,8 @@ class Divider
   DIVIDED_PATH = (ASSETS_PATH + 'divideds' + File::SEPARATOR).freeze
 
   # export file
-  EXPORT_TARGET_FILE_PATH = (DIVIDED_PATH + 'target' + FILE_SUFFIX).freeze
+  TEXT_FILE_SUFFIX = '.txt'.freeze
+  EXPORT_TARGET_FILE_PATH = (DIVIDED_PATH + 'target' + TEXT_FILE_SUFFIX).freeze
   EXPORT_LIST_SEPARATOR = ','.freeze
   EXPORT_MESSAGE = 'Finish: export '.freeze
 
@@ -44,7 +45,7 @@ class Divider
     # => like this: '1,0,3, ... 6,4,2'
 
     pixels_color_list.each_with_index do |pixels_color_str, index|
-      path = DIVIDED_PATH + 'elements' + index.to_s + FILE_SUFFIX
+      path = DIVIDED_PATH + 'elements' + index.to_s + JPG_FILE_SUFFIX
       export(path, pixels_color_str)
     end
     # => like this: 0 - 'hoge.jpg,foobar.jpg, ... ,last.jpg'
@@ -67,7 +68,7 @@ class Divider
   # same as other files
   def get_image_name_list(path)
     image_name_list = []
-    Dir.glob(path + '*' + FILE_SUFFIX).each do |file|
+    Dir.glob(path + '*' + JPG_FILE_SUFFIX).each do |file|
       image_name_list << file
     end
     image_name_list
@@ -80,7 +81,7 @@ class Divider
   # get string about color list of target
   def target_color_list
     color_list = ''
-    target_file = TARGET_FILE_NAME + NEW_TARGET_NAME_SUFFIX + FILE_SUFFIX
+    target_file = TARGET_FILE_NAME + NEW_TARGET_NAME_SUFFIX + JPG_FILE_SUFFIX
     img = Magick::ImageList.new(target_file)
     pixels = img.get_pixels(0, 0, img.columns, img.rows)
     pixels.each do |pixel|
@@ -108,7 +109,6 @@ class Divider
     color_list = ['', '', '', '', '', '', '', '']
     image_name_list = get_image_name_list PIXELS_PATH
     image_name_list.each do |image_name|
-      # TODO: get image color -> divide 8 pattern
       color_list = pixel_color_list(image_name, color_list)
     end
     color_list.each(&:chop!)
