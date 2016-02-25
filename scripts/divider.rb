@@ -41,23 +41,33 @@ class Divider
 
   # try to set color feature of pixels and targets combination to file
   def divide
+    # target
     target_color_list_string = target_color_list
     export(EXPORT_TARGET_FILE_PATH, target_color_list_string)
-    # => like this: '1,0,3, ... 6,4,2'
-    puts target_color_list_string.length
-    # => 40,000
+    display target_color_list_string
 
+    # pixels
     pixels_color_list.each_with_index do |pixels_color_str, index|
       path = DIVIDED_PATH + 'elements' + index.to_s + TEXT_FILE_SUFFIX
       export(path, pixels_color_str)
-      puts pixels_color_str.length
-      # => same as the count of analyzer
+      display pixels_color_str
     end
-    # => like this: 0 - 'hoge.jpg,foobar.jpg, ... ,last.jpg'
-    # => like this: 1 - 'hoge.jpg,foobar.jpg, ... ,last.jpg'
-    # => like this: ...
-    # => like this: 7 - 'hoge.jpg,foobar.jpg, ... ,last.jpg'
   end
+
+  # targets_color
+  # => like this: '1,0,3, ... 6,4,2'
+  #
+  # targets_color_size
+  # # => like this: '1,0,3, ... 6,4,2'
+  #
+  # pixels_color
+  # => like this: 0 - 'hoge.jpg,foobar.jpg, ... ,last.jpg'
+  # => like this: 1 - 'hoge.jpg,foobar.jpg, ... ,last.jpg'
+  # => like this: ...
+  # => like this: 7 - 'hoge.jpg,foobar.jpg, ... ,last.jpg'
+  #
+  # pixels_color_size
+  # # => same as the count of analyzer
 
   # ----------------------------------------
   # helper methods - files
@@ -77,6 +87,11 @@ class Divider
       image_name_list << file
     end
     image_name_list
+  end
+
+  # display list contents size
+  def display(array)
+    puts array.split[EXPORT_LIST_SEPARATOR].length
   end
 
   # ----------------------------------------
