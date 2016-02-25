@@ -22,6 +22,14 @@ class Divider
   # pixel file and directory
   PIXELS_PATH = (ASSETS_PATH + 'pixels' + File::SEPARATOR).freeze
 
+  # divided file and directory
+  DIVIDED_PATH = (DIVIDED_PATH + 'pixels' + File::SEPARATOR).freeze
+
+  # export file
+  EXPORT_TARGET_FILE_PATH = (DIVIDED_PATH + 'target' + FILE_SUFFIX).freeze
+  EXPORT_PIXELS_FILE_PATH = (DIVIDED_PATH + 'pixels' + FILE_SUFFIX).freeze
+  EXPORT_MESSAGE = 'Finish: export '.freeze
+
   def init
     self
   end
@@ -32,11 +40,47 @@ class Divider
 
   # try to set color feature of pixels and targets combination to file
   def divide
-    # TODO: pixels feature to file
-    # TODO: targets feature to file
+    export(EXPORT_TARGET_FILE_PATH, get_target_color_list)
+    export(EXPORT_PIXELS_FILE_PATH, get_pixels_color_list)
   end
 
   # ----------------------------------------
-  # helper methods - xxx
+  # helper methods - files
   # ----------------------------------------
+
+  # export text file
+  def export(file_path, string)
+    File.write(file_path, string)
+    puts EXPORT_MESSAGE + file_path
+  end
+
+  # get images(.jpg) in the path
+  # same as other files
+  def get_image_name_list(path)
+    image_name_list = []
+    Dir.glob(path + '*' + FILE_SUFFIX).each do |file|
+      image_name_list << file
+    end
+    image_name_list
+  end
+
+  # ----------------------------------------
+  # helper methods - target
+  # ----------------------------------------
+
+  # get string about color list of target
+  def target_color_list
+    color_list = ''
+    color_list
+  end
+
+  # ----------------------------------------
+  # helper methods - pixels
+  # ----------------------------------------
+
+  # get string about color list of pixels
+  def pixels_color_list
+    color_list = ''
+    color_list
+  end
 end

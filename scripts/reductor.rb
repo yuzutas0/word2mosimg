@@ -68,7 +68,7 @@ class Reductor
   # ----------------------------------------
 
   # get images(.jpg) in the path
-  # same as analyzer
+  # same as other files
   def get_image_name_list(path)
     image_name_list = []
     Dir.glob(path + '*' + FILE_SUFFIX).each do |file|
