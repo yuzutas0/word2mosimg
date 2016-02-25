@@ -91,16 +91,11 @@ class Divider
     color_list
   end
 
+  # get string about color list with the pixel
   def target_color_variation(pixel, color_list)
     string = String.new(color_list)
     pixel_l = pixel.to_hsla[2].to_i
-    (0..7).each do |index|
-      minimum = 32 * index
-      maximum = 32 * (index + 1)
-      if pixel_l >= minimum && pixel_l < maximum
-        string += index.to_s + EXPORT_LIST_SEPARATOR
-      end
-    end
+    string += pattern(pixel_l).to_s + EXPORT_LIST_SEPARATOR
     string
   end
 
@@ -114,8 +109,36 @@ class Divider
     image_name_list = get_image_name_list PIXELS_PATH
     image_name_list.each do |image_name|
       # TODO: get image color -> divide 8 pattern
+      color_list = pixel_color_list(image_name, color_list)
     end
+    color_list.each(&:chop!)
     color_list
     # => like this: ['hogehoge.jpg,foobar.jpg', ... 'last.jpg,final.jpg']
+  end
+
+  # get string about color list with the pixel
+  def pixel_color_list(image_name, color_list)
+    array = Array.new(color_list)
+    img = Magick::ImageList.new(image_name)
+    pixels = img.get_pixels(0, 0, img.columns, img.rows)
+    pixel_l = pixels[0].to_hsla[2].to_i
+    array[pattern(pixel_l)] += File.basename(image_name) + EXPORT_LIST_SEPARATOR
+    img.destroy!
+    array
+  end
+
+  # ----------------------------------------
+  # helper methods - color pattern
+  # ----------------------------------------
+
+  # get string about color list with the pixel - divide 8 pattern here
+  def pattern(pixel_l)
+    result = 0
+    (0..7).each do |index|
+      minimum = 32 * index
+      maximum = 32 * (index + 1)
+      result = index if pixel_l >= minimum && pixel_l < maximum
+    end
+    result
   end
 end
