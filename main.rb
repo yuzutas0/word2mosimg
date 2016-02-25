@@ -6,6 +6,7 @@ class Main
 
   require_relative 'scripts/crawler'
   require_relative 'scripts/reductor'
+  require_relative 'scripts/analyzer'
 
   # ----------------------------------------
   # parameter
@@ -34,7 +35,7 @@ class Main
     # # element images into 1 * 1 to learn
     # reductor.pixel
 
-    Reductor.new.init.diff_colors
+    Analyzer.new.init.diff_colors
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
@@ -54,5 +55,3 @@ keyword = URI.escape '愛'
 main = Main.new
 main.init keyword
 main.execute
-
-
