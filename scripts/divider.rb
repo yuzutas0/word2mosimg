@@ -27,7 +27,6 @@ class Divider
 
   # export file
   EXPORT_TARGET_FILE_PATH = (DIVIDED_PATH + 'target' + FILE_SUFFIX).freeze
-  EXPORT_PIXELS_FILE_PATH = (DIVIDED_PATH + 'pixels' + FILE_SUFFIX).freeze
   EXPORT_MESSAGE = 'Finish: export '.freeze
 
   def init
@@ -40,8 +39,11 @@ class Divider
 
   # try to set color feature of pixels and targets combination to file
   def divide
-    export(EXPORT_TARGET_FILE_PATH, get_target_color_list)
-    export(EXPORT_PIXELS_FILE_PATH, get_pixels_color_list)
+    export(EXPORT_TARGET_FILE_PATH, target_color_list)
+    pixels_color_list.each_with_index do |pixels_color_str, index|
+      path = DIVIDED_PATH + 'elements' + index.to_s + FILE_SUFFIX
+      export(path, pixels_color_str)
+    end
   end
 
   # ----------------------------------------
@@ -71,7 +73,11 @@ class Divider
   # get string about color list of target
   def target_color_list
     color_list = ''
+    # TODO: get image
+    # TODO: pixel -> loop
+    # TODO: get color -> divide 8 pattern
     color_list
+    # => like this: ['0, 2, 0, 2, 0, ..., 0, 6, 3']
   end
 
   # ----------------------------------------
@@ -80,7 +86,10 @@ class Divider
 
   # get string about color list of pixels
   def pixels_color_list
-    color_list = ''
+    color_list = ['', '', '', '', '', '', '', '']
+    # TODO: get images -> loop
+    # TODO: get image color -> divide 8 pattern
     color_list
+    # => like this: ['hogehoge.jpg, foobar.jpg', ... 'last.jpg, final.jpg']
   end
 end
