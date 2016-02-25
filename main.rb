@@ -15,6 +15,7 @@ class Main
 
   def init(keyword)
     @keyword = keyword
+    self
   end
 
   # ----------------------------------------
