@@ -8,6 +8,7 @@ class Main
   require_relative 'scripts/reductor'
   require_relative 'scripts/analyzer'
   require_relative 'scripts/divider'
+  require_relative 'scripts/combiner'
 
   # ----------------------------------------
   # parameter
@@ -41,7 +42,10 @@ class Main
     # Analyzer.new.init.diff_colors
 
     # divide target and pixel colors to 8 pattern
-    Divider.new.init.divide
+    # Divider.new.init.divide
+
+    # combine target colors and element files
+    Combiner.new.init.combine
 
     # TODO: learn combination of images
     # todo convert goal_image to vector
