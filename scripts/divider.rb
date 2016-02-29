@@ -74,6 +74,7 @@ class Divider
   # ----------------------------------------
 
   # export text file
+  # same as other class
   def export(file_path, string)
     File.write(file_path, string)
     puts EXPORT_MESSAGE + file_path

@@ -22,9 +22,17 @@ class Combiner
 
   # combination
   COMBINED_PATH = (ASSETS_PATH + 'combinations' + File::SEPARATOR).freeze
-  COMBINED_FILE_PREFIX = 'line'.freeze
+  COMBINED_FILE_NAME = (COMBINED_PATH + 'index' + TEXT_FILE_SUFFIX).freeze
 
   def init
+    # import text files
+    @target_array = acquire_target_array
+    @element_array_list = acquire_element_array_list
+
+    # set count
+    @init_count = acquire_element_init_count(@element_array_list)
+    @temp_count = acquire_element_temp_count(@element_array_list)
+
     self
   end
 
@@ -33,17 +41,18 @@ class Combiner
   # ----------------------------------------
 
   def combine
-    target_array = acquire_target_array
-    element_array_list = acquire_element_array_list
+    # init string
+    string = ''
 
-    element_init_count = acquire_element_init_count(element_array_list)
-    element_temp_count = acquire_element_temp_count(element_array_list)
-    combination_array = []
-
-    # output: array of jpg files
-    target_array.each do |target_number|
-      # target number -> jpg file
+    # set string
+    @target_array.each do |target|
+      @temp_count[target] = next_count(@temp_count, @init_count, target)
+      string += @element_array_list[target][@temp_count[target]]
+      string += EXPORT_LIST_SEPARATOR
     end
+
+    # export string
+    export(COMBINED_FILE_NAME, string[0..(last - 1)])
   end
 
   # ----------------------------------------
@@ -82,5 +91,17 @@ class Combiner
       element_temp_count[count] = 0
     end
     element_temp_count
+  end
+
+  def next_count(temp_count, init_count, target)
+    count = temp_count[target] + 1
+    count = 0 unless count <= init_count[target]
+    count
+  end
+
+  # same as other class
+  def export(file_path, string)
+    File.write(file_path, string)
+    puts EXPORT_MESSAGE + file_path
   end
 end
