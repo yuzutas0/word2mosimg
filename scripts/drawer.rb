@@ -34,6 +34,14 @@ class Drawer
   # main action
   # ----------------------------------------
 
+  def draw
+    # TODO: import from combination index
+    # TODO: loop for line 001 - 200
+    # TODO: connect images for the line
+    # TODO: export connected image to draws
+    # TODO: connect each line images after loop
+  end
+
   # ----------------------------------------
   # helper methods - xxx
   # ----------------------------------------
