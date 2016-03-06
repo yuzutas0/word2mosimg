@@ -29,6 +29,9 @@ class Drawer
   SIDE_PICTURES_COUNT = 200
   DRAW_LINE_FILE_NAME_PREFIX = (DRAW_PATH + 'line_').freeze
   DRAW_MOSAIC_FILE_NAME = (DRAW_PATH + 'mosaic' + PNG_FILE_SUFFIX).freeze
+  ORIGINAL_SCALE = 1
+  RESIZED_SCALE  = 0.5
+  DRAW_RESIZE_FILE_NAME = (DRAW_PATH + 'image' + PNG_FILE_SUFFIX).freeze
 
   def init
     self
@@ -43,7 +46,8 @@ class Drawer
     # (0..SIDE_PICTURES_COUNT - 1).each do |index|
     #   make_image_for_line(index, image_name_list)
     # end
-    make_mosaic_image
+    # make_mosaic_image(DRAW_MOSAIC_FILE_NAME, ORIGINAL_SCALE)
+    make_mosaic_image(DRAW_RESIZE_FILE_NAME, RESIZED_SCALE)
   end
 
   # ----------------------------------------
@@ -87,15 +91,16 @@ class Drawer
   end
 
   # export mosaic image based on each line images
-  def make_mosaic_image
+  def make_mosaic_image(name, size)
     mosaic_image = Magick::ImageList.new
     (0..SIDE_PICTURES_COUNT - 1).each do |index|
       line_image_name = get_image_name(index)
       line_image = Magick::ImageList.new(line_image_name)
+      line_image.first.resize!(size)
       mosaic_image << line_image.append(true)
       line_image.destroy!
     end
-    mosaic_image.append(true).write(DRAW_MOSAIC_FILE_NAME)
+    mosaic_image.append(true).write(name)
     mosaic_image.destroy!
   end
 end
