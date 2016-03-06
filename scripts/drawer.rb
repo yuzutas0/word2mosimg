@@ -16,8 +16,12 @@ class Drawer
   TEXT_FILE_SUFFIX = '.txt'.freeze
 
   # combination
-  COMBINATION_PATH = (ASSETS_PATH + 'combinations').freeze
+  COMBINATION_PATH = (ASSETS_PATH + 'combinations' + File::SEPARATOR).freeze
   COMBINATION_FILE_NAME = (COMBINATION_PATH + 'index' + TEXT_FILE_SUFFIX).freeze
+  COMBINATION_SEPARATOR = ','.freeze
+
+  # element
+  ELEMENTS_PATH = (ASSETS_PATH + 'elements' + File::SEPARATOR).freeze
 
   # draw
   DRAW_PATH = (ASSETS_PATH + 'draws').freeze
@@ -35,7 +39,9 @@ class Drawer
   # ----------------------------------------
 
   def draw
-    # TODO: import from combination index
+    # import from combination index
+    image_name_list = get_image_name_list COMBINATION_FILE_NAME
+    puts image_name_list[0..10]
     # TODO: loop for line 001 - 200
     # TODO: connect images for the line
     # TODO: export connected image to draws
@@ -45,4 +51,11 @@ class Drawer
   # ----------------------------------------
   # helper methods - xxx
   # ----------------------------------------
+
+  # get array about image files combined with the target image
+  def get_image_name_list(filename)
+    text = File.read filename
+    image_name_list = text.split COMBINATION_SEPARATOR
+    image_name_list
+  end
 end

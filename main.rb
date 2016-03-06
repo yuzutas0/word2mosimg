@@ -9,6 +9,7 @@ class Main
   require_relative 'scripts/analyzer'
   require_relative 'scripts/divider'
   require_relative 'scripts/combiner'
+  require_relative 'scripts/drawer'
 
   # ----------------------------------------
   # parameter
@@ -45,11 +46,9 @@ class Main
     # Divider.new.init.divide
 
     # combine target colors and element files
-    Combiner.new.init.combine
+    # Combiner.new.init.combine
 
-    # TODO: make image
-    # todo connect images to one bigger image with sort result
-    # todo export image file
+    Drawer.new.init.draw
   end
 end
 
