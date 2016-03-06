@@ -1,6 +1,14 @@
 This is the script to convert form keyword to mosaic image.
 
-# Purpose
+# Output image like...
+
+![all of mosaic image resized](sample/all.png)
+
+# And Detail is...
+
+![detail of mosaic image resized](sample/detail.png)
+
+# workflow
 
 1. you input the keyword and the image.
 2. this script finds some images from google-images with the keyword.
@@ -11,8 +19,17 @@ This is the script to convert form keyword to mosaic image.
 # Usage
 
 ```
+
 $ cd [this script directory]
-$ cp [target file] [this script directory]/assets/targets/
+
+$ bundle install --path vendor/bundle --binstubs bundle_bin
+
+$ cp [target file] [this script directory]/assets/targets/ # use .jpg file
+
+$ vim main.rb # rewrite keywords for search
+
+$ bundle exec ruby main.rb
+
 ```
 
 # Attention
@@ -23,3 +40,4 @@ WIP...
 
 WIP...
 
+* please git commit after `bundle exec "rubocop --auto-gen-config"` and `bundle exec "rubocop --auto-correct"`

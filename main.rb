@@ -15,6 +15,8 @@ class Main
   # parameter
   # ----------------------------------------
 
+  # TODO: redesign some parameters and methods at other ruby files
+
   def init(keywords)
     @keywords = keywords
     self
@@ -54,6 +56,8 @@ class Main
     Drawer.new.init.draw
   end
 end
+
+# TODO: move keyword to command-line-arg or YAML-file
 
 # initialize and execute
 require 'uri'
