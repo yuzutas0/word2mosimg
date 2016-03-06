@@ -39,10 +39,11 @@ class Drawer
   # ----------------------------------------
 
   def draw
-    # import from combination index
     image_name_list = get_image_name_list COMBINATION_FILE_NAME
-    puts image_name_list[0..10]
-    # TODO: loop for line 001 - 200
+    (0..SIDE_PICTURES_COUNT - 1).each do |index|
+      image_name_list_for_line = get_list_for_line(index, image_name_list)
+      puts image_name_list_for_line
+    end
     # TODO: connect images for the line
     # TODO: export connected image to draws
     # TODO: connect each line images after loop
@@ -52,10 +53,18 @@ class Drawer
   # helper methods - xxx
   # ----------------------------------------
 
-  # get array about image files combined with the target image
+  # import from combination index
   def get_image_name_list(filename)
     text = File.read filename
     image_name_list = text.split COMBINATION_SEPARATOR
     image_name_list
+  end
+
+  # choose image only about the line
+  def get_list_for_line(index, image_name_list)
+    first_image_index = index * SIDE_PICTURES_COUNT
+    last_image_index = first_image_index + SIDE_PICTURES_COUNT - 1
+    list_for_line = image_name_list[first_image_index..last_image_index]
+    list_for_line
   end
 end
