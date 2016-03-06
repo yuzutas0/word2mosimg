@@ -133,4 +133,5 @@ bundle_bin/*
 # ========================================
 
 assets/*/*.jpg
+assets/*/*.png
 assets/*/*.txt
